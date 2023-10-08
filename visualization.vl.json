@@ -1,0 +1,72 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Agricultural Emissions by Country",
+  "width": 800,
+  "height": 400,
+  "projection": {"type": "equalEarth"},
+  "data": {
+    "url": "https://raw.githubusercontent.com/JiazhouLiu/FIT3179/main/VegaLite/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+    "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+  },
+  "transform": [
+    {
+      "lookup": "properties.NAME",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/jyon0031/3171_minwage/main/ag_emissions_cleaned.csv"
+        },
+        "key": "country",
+        "fields": ["emission", "region"]
+      }
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "values": [{"country": "China", "longitude": 103.8, "latitude": 34.1}]
+      },
+      "mark": "text",
+      "encoding": {
+        "longitude": {"field": "longitude", "type": "quantitative"},
+        "latitude": {"field": "latitude", "type": "quantitative"},
+        "text": {"field": "country", "type": "nominal"}
+      }
+    },
+    {
+      "mark": {"type": "geoshape"},
+      "selection": {
+        "regionFilter": {
+          "type": "single",
+          "fields": ["region"],
+          "bind": {
+            "input": "select",
+            "options": [
+              null,
+              "Asia Pacific",
+              "Europe",
+              "North America",
+              "Africa",
+              "Russia & Caspian",
+              "Middle East"
+            ],
+            "name": "Region Filter:"
+          }
+        }
+      },
+      "transform": [{"filter": {"selection": "regionFilter"}}],
+      "encoding": {
+        "color": {
+          "field": "emission",
+          "type": "quantitative",
+          "title": "Emissions",
+          "scale": {"type": "log"}
+        },
+        "tooltip": [
+          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+          {"field": "emission", "type": "quantitative"}
+        ]
+      }
+    }
+  ],
+  "config": {}
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Instant Noodle Consumption in 2022",
+  "description": "A bar chart showing the consumption of instant noodles by country for the year 2022.",
+  "data": {
+    "url": "https://raw.githubusercontent.com/jyon0031/3171_minwage/main/noodles.csv"
+  },
+  "config": {"axisY": {"grid": false}},
+  "layer": [
+    {
+      "mark": {"type": "bar", "color": "yellowgreen"},
+      "encoding": {
+        "x": {
+          "field": "Country/Territory",
+          "type": "ordinal",
+          "axis": {"title": "Country/Territory"}
+        },
+        "y": {
+          "field": "Consumption in 2022 ($millions)",
+          "type": "quantitative",
+          "axis": {"title": "Log scale Consumption in 2022 ($millions)"},
+          "scale": {"type": "log"},
+          "grid": false
+        },
+        "tooltip": [
+          {"field": "Country/Territory", "type": "ordinal"},
+          {
+            "field": "Consumption in 2022 ($millions)",
+            "type": "quantitative",
+            "title": "Consumption in 2022 ($millions)"
+          },
+          {
+            "field": "2022 Population",
+            "type": "quantitative",
+            "title": "2022 Population"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "fontWeight": "bold", "fontStyle": "italic"},
+      "encoding": {
+        "x": {"datum": "China"},
+        "y": {
+          "field": "Consumption in 2022 ($millions)",
+          "type": "quantitative",
+          "aggregate": "max"
+        },
+        "text": {"value": "Biggest consumer"}
+      },
+      "transform": [{"filter": "datum['Country/Territory'] === 'China'"}]
+    }
+  ]
+}
